@@ -10,6 +10,8 @@ git clone https://github.com/patrickgwl1/seqlen.git
 # Running the script
 
 ```
+cd seqlen
+
 python3
 
 >>> import seqlen
@@ -20,4 +22,13 @@ python3
 
 # Running the unit test
 
+```
+pip install pytest
 
+pip install coverage
+
+coverage run -m pytest -v
+
+coverage report -m
+
+```
