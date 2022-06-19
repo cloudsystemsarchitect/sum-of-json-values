@@ -22,7 +22,7 @@ pip3 install -r requirements.txt
 # How to run
 
 ```
-python3 seqlen.py --json_dir='<input directory>'
+python3 seqlen.py --input_dir='<input directory>'
 
 ```
 
