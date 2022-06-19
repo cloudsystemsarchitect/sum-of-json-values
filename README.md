@@ -1,7 +1,7 @@
 # seqlen
 This script finds the total of `seqlen` values in all files matching `*.data.json` pattern found in a given folder. 
 
-* It handles the invalid `seqlen` by recording it in a log file. 
+* It handles the invalid `seqlen` by recording it in a log file using the `logging` module. 
 * It supports the search in the subdirectory using the `glob` module to find all the filenames matching a `*.data.json` in the directory and sub-directory. 
 * It uses the `cysimdjson` module to speed up reading the `seqlen` value from the JSON file
 
