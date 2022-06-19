@@ -1,4 +1,5 @@
 import unittest
+from unittest.case import _AssertRaisesContext
 from unittest.mock import patch, mock_open
 import os
 import sys
@@ -31,17 +32,17 @@ class TestSeqLen(unittest.TestCase):
 
     def test_get_total_seqlen_from_file_with_integer(self):
         """Check a if seqlen adds up correctly within a file"""
-        
-        file_content_mock= """{"format_conversion": {"alphabet_conversion": false, "header_corrected": false}, "barcode": "NA", "retcode": "PASS", "exit_status": "Workflow successful", "calibration": false, "barcode_detection": {"status": "1", "barcode": "NA", "barcode_score": 0.0}, "start_time": 1501853965, "read_id": "314309c0-09de-4291-a5e4-0ea288db74f3", "seqlen": 1, "filename": "split_aa.fastq", "runid": "f9b53105df0f6e165aa09f824bd26cbcb4dfa93a", "mean_qscore": 10.377, "software": {"time_stamp": "2019-Aug-22 09:38:14", "version": "3.10.0", "component": "homogeny"}}
+
+        mock_file_content= """{"format_conversion": {"alphabet_conversion": false, "header_corrected": false}, "barcode": "NA", "retcode": "PASS", "exit_status": "Workflow successful", "calibration": false, "barcode_detection": {"status": "1", "barcode": "NA", "barcode_score": 0.0}, "start_time": 1501853965, "read_id": "314309c0-09de-4291-a5e4-0ea288db74f3", "seqlen": 1, "filename": "split_aa.fastq", "runid": "f9b53105df0f6e165aa09f824bd26cbcb4dfa93a", "mean_qscore": 10.377, "software": {"time_stamp": "2019-Aug-22 09:38:14", "version": "3.10.0", "component": "homogeny"}}
         {"format_conversion": {"alphabet_conversion": false, "header_corrected": false}, "barcode": "NA", "retcode": "PASS", "exit_status": "Workflow successful", "calibration": false, "barcode_detection": {"status": "1", "barcode": "NA", "barcode_score": 0.0}, "start_time": 1501853965, "read_id": "314309c0-09de-4291-a5e4-0ea288db74f3", "seqlen": 1, "filename": "split_aa.fastq", "runid": "f9b53105df0f6e165aa09f824bd26cbcb4dfa93a", "mean_qscore": 10.377, "software": {"time_stamp": "2019-Aug-22 09:38:14", "version": "3.10.0", "component": "homogeny"}}
         {"format_conversion": {"alphabet_conversion": false, "header_corrected": false}, "barcode": "NA", "retcode": "PASS", "exit_status": "Workflow successful", "calibration": false, "barcode_detection": {"status": "1", "barcode": "NA", "barcode_score": 0.0}, "start_time": 1501853965, "read_id": "314309c0-09de-4291-a5e4-0ea288db74f3", "seqlen": 1, "filename": "split_aa.fastq", "runid": "f9b53105df0f6e165aa09f824bd26cbcb4dfa93a", "mean_qscore": 10.377, "software": {"time_stamp": "2019-Aug-22 09:38:14", "version": "3.10.0", "component": "homogeny"}}
         {"format_conversion": {"alphabet_conversion": false, "header_corrected": false}, "barcode": "NA", "retcode": "PASS", "exit_status": "Workflow successful", "calibration": false, "barcode_detection": {"status": "1", "barcode": "NA", "barcode_score": 0.0}, "start_time": 1501853965, "read_id": "314309c0-09de-4291-a5e4-0ea288db74f3", "seqlen": 1, "filename": "split_aa.fastq", "runid": "f9b53105df0f6e165aa09f824bd26cbcb4dfa93a", "mean_qscore": 10.377, "software": {"time_stamp": "2019-Aug-22 09:38:14", "version": "3.10.0", "component": "homogeny"}}
         {"format_conversion": {"alphabet_conversion": false, "header_corrected": false}, "barcode": "NA", "retcode": "PASS", "exit_status": "Workflow successful", "calibration": false, "barcode_detection": {"status": "1", "barcode": "NA", "barcode_score": 0.0}, "start_time": 1501853965, "read_id": "314309c0-09de-4291-a5e4-0ea288db74f3", "seqlen": 1, "filename": "split_aa.fastq", "runid": "f9b53105df0f6e165aa09f824bd26cbcb4dfa93a", "mean_qscore": 10.377, "software": {"time_stamp": "2019-Aug-22 09:38:14", "version": "3.10.0", "component": "homogeny"}}
         {"format_conversion": {"alphabet_conversion": false, "header_corrected": false}, "barcode": "NA", "retcode": "PASS", "exit_status": "Workflow successful", "calibration": false, "barcode_detection": {"status": "1", "barcode": "NA", "barcode_score": 0.0}, "start_time": 1501853965, "read_id": "314309c0-09de-4291-a5e4-0ea288db74f3", "seqlen": 1, "filename": "split_aa.fastq", "runid": "f9b53105df0f6e165aa09f824bd26cbcb4dfa93a", "mean_qscore": 10.377, "software": {"time_stamp": "2019-Aug-22 09:38:14", "version": "3.10.0", "component": "homogeny"}}"""
         mock_file_path = 'file/path/mock'
-        
+
         with patch('seqlen.open'.format(__name__),
-            new=mock_open(read_data=file_content_mock)) as file:
+            mock_open(read_data=mock_file_content)) as file:
             actual = seqlen.get_total_seqlen_from_file(json_file=mock_file_path)
             file.assert_called_once_with(mock_file_path, encoding='utf-8')
         expected = 6
@@ -52,8 +53,8 @@ class TestSeqLen(unittest.TestCase):
         Check a if seqlen adds up correctly within a file even if one of the seqlen is wrong
         There is an additional check for the log file output
         """
-        
-        file_content_mock= """{"format_conversion": {"alphabet_conversion": false, "header_corrected": false}, "barcode": "NA", "retcode": "PASS", "exit_status": "Workflow successful", "calibration": false, "barcode_detection": {"status": "1", "barcode": "NA", "barcode_score": 0.0}, "start_time": 1501853965, "read_id": "314309c0-09de-4291-a5e4-0ea288db74f3", "seqlen": 1, "filename": "split_aa.fastq", "runid": "f9b53105df0f6e165aa09f824bd26cbcb4dfa93a", "mean_qscore": 10.377, "software": {"time_stamp": "2019-Aug-22 09:38:14", "version": "3.10.0", "component": "homogeny"}}
+
+        mock_file_content= """{"format_conversion": {"alphabet_conversion": false, "header_corrected": false}, "barcode": "NA", "retcode": "PASS", "exit_status": "Workflow successful", "calibration": false, "barcode_detection": {"status": "1", "barcode": "NA", "barcode_score": 0.0}, "start_time": 1501853965, "read_id": "314309c0-09de-4291-a5e4-0ea288db74f3", "seqlen": 1, "filename": "split_aa.fastq", "runid": "f9b53105df0f6e165aa09f824bd26cbcb4dfa93a", "mean_qscore": 10.377, "software": {"time_stamp": "2019-Aug-22 09:38:14", "version": "3.10.0", "component": "homogeny"}}
         {"format_conversion": {"alphabet_conversion": false, "header_corrected": false}, "barcode": "NA", "retcode": "PASS", "exit_status": "Workflow successful", "calibration": false, "barcode_detection": {"status": "1", "barcode": "NA", "barcode_score": 0.0}, "start_time": 1501853965, "read_id": "314309c0-09de-4291-a5e4-0ea288db74f3", "seqlen": 1, "filename": "split_aa.fastq", "runid": "f9b53105df0f6e165aa09f824bd26cbcb4dfa93a", "mean_qscore": 10.377, "software": {"time_stamp": "2019-Aug-22 09:38:14", "version": "3.10.0", "component": "homogeny"}}
         {"format_conversion": {"alphabet_conversion": false, "header_corrected": false}, "barcode": "NA", "retcode": "PASS", "exit_status": "Workflow successful", "calibration": false, "barcode_detection": {"status": "1", "barcode": "NA", "barcode_score": 0.0}, "start_time": 1501853965, "read_id": "314309c0-09de-4291-a5e4-0ea288db74f3", "seqlen": 1, "filename": "split_aa.fastq", "runid": "f9b53105df0f6e165aa09f824bd26cbcb4dfa93a", "mean_qscore": 10.377, "software": {"time_stamp": "2019-Aug-22 09:38:14", "version": "3.10.0", "component": "homogeny"}}
         {"format_conversion": {"alphabet_conversion": false, "header_corrected": false}, "barcode": "NA", "retcode": "PASS", "exit_status": "Workflow successful", "calibration": false, "barcode_detection": {"status": "1", "barcode": "NA", "barcode_score": 0.0}, "start_time": 1501853965, "read_id": "314309c0-09de-4291-a5e4-0ea288db74f3", "seqlen": 1, "filename": "split_aa.fastq", "runid": "f9b53105df0f6e165aa09f824bd26cbcb4dfa93a", "mean_qscore": 10.377, "software": {"time_stamp": "2019-Aug-22 09:38:14", "version": "3.10.0", "component": "homogeny"}}
@@ -63,9 +64,31 @@ class TestSeqLen(unittest.TestCase):
         expected_log = 'JSON object not valid:'
         expected_num = 5
         with patch('seqlen.open'.format(__name__),
-            new=mock_open(read_data=file_content_mock)) as file:
+            mock_open(read_data=mock_file_content)) as file:
             with self.assertLogs('seqlen') as log_captured:
                 actual = seqlen.get_total_seqlen_from_file(json_file=mock_file_path)
                 file.assert_called_once_with(mock_file_path, encoding='utf-8')
                 self.assertIn(expected_log, log_captured.output[0])
                 self.assertEqual(expected_num, actual)
+
+    @patch('seqlen.get_total_seqlen_from_file')
+    @patch('seqlen.get_file_list')
+    def test_get_total_seqlen_from_dir(self, get_file_list_mock, get_total_seqlen_from_file_mock):
+        """
+        Check a if seqlen adds up correctly within a directory
+        """
+        get_total_seqlen_from_file_mock.return_value = 5
+        get_file_list_mock.return_value =['/file/path/name1','/file/path/name2','/file/path/name3']
+        mock_dir = '/mock/file/path/'
+        expected_num = 15
+        actual = seqlen.get_total_seqlen_from_dir(input_dir=mock_dir)
+        self.assertEqual(get_total_seqlen_from_file_mock.call_count, 3)
+        self.assertEqual(expected_num, actual)
+
+    def test_get_file_list(self):
+        """Check empty directory path"""
+        mock_dir = '/mock/file/path/'
+        try:
+            seqlen.get_file_list(json_dir=mock_dir)
+        except Exception as exc:
+            self.assertEqual(exc.args[0], 'The /mock/file/path/ directory failed to return any file.')

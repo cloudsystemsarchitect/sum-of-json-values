@@ -1,34 +1,47 @@
 # seqlen
-This utility finds the total of `seqlen` values in all files matching `*.data.json` pattern found in a given folder. 
+This script finds the total of `seqlen` values in all files matching `*.data.json` pattern found in a given folder. 
 
-# Installation 
+* It handles the invalid `seqlen` by recording it in a log file. This feature is helpful for large data sets that might take considerable time to run. 
+* It supports the search in the subdirectory using the `glob` module to find all the filenames matching a `*.data.json` in the directory and sub-directory. 
+* It uses the `cysimdjson` module to speed up reading the `seqlen` value from the JSON file
+
+# Installation in Linux 
 ```
 git clone https://github.com/patrickgwl1/seqlen.git
 
-```
-
-# Running the script
-
-```
 cd seqlen
 
-python3
+python3 -m venv env
 
->>> import seqlen
+source env/bin/activate
 
->>> seqlen.get_total_seqlen_from_dir(json_dir='<Replace with directory with all the `*.data.json` files>')
+pip3 install -r requirements.txt
+
+```
+
+# How to run
+
+```
+python3 seqlen.py --json_dir='<input directory>'
+
+For help, or to see optional args: python3 seqlen.py -h
 
 ```
 
-# Running the unit test
+# How to run the unit tests
 
 ```
+
+cd seqlen
+
 pip install pytest
 
 pip install coverage
 
-coverage run -m pytest -v
+coverage run -m pytest
 
 coverage report -m
 
 ```
+
+
