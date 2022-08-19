@@ -1,4 +1,4 @@
-# seqlen
+# Get the sum of JSON values
 This script finds the total of `seqlen` values in all files matching `*.data.json` pattern found in a given folder. 
 
 * It handles the invalid `seqlen` by recording it in a log file using the `logging` module. 

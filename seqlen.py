@@ -20,14 +20,6 @@ LOG_FILE_NAME = 'seqlen.log'
 logging.basicConfig(filename=LOG_FILE_NAME, level=logging.ERROR)
 logger = logging.getLogger(__name__)
 
-# def get_seqlen_from_json(*, json_obj):
-#     """Return the seqlen from a single line of JSON"""
-#     try:
-#         return json.loads(json_obj)['seqlen']
-#     except json.JSONDecodeError:
-#         logger.error('Error: JSON object not valid: %s', json_obj)
-#         return 0
-
 def get_seqlen_from_json(*, json_obj):
     """Return the seqlen from a single line of JSON
        Access using JSON pointer to avoid loading the entire JSON"""
@@ -37,15 +29,6 @@ def get_seqlen_from_json(*, json_obj):
     except ValueError:
         logger.error('Error: JSON object not valid: %s', json_obj)
         return 0
-
-# def get_total_seqlen_from_file(*, json_file):
-#     """Return the sum of seqlen in a single JSON file"""
-#     try:
-#         with open(json_file, encoding="utf-8") as file:
-#             return sum(get_seqlen_from_json(json_obj=_) for _ in file)
-#     except FileNotFoundError:
-#         logger.error('Error: File not found: %s', json_file)
-#         return 0
 
 def get_total_seqlen_from_file(*, json_file):
     """Return the sum of seqlen in a single JSON file"""
